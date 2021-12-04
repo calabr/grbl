@@ -172,11 +172,11 @@
 // immediately forces a feed hold and then safely de-energizes the machine. Resuming is blocked until
 // the safety door is re-engaged. When it is, Grbl will re-energize the machine and then resume on the
 // previous tool path, as if nothing happened.
-// #define ENABLE_SAFETY_DOOR_INPUT_PIN // Default disabled. Uncomment to enable.
+#define ENABLE_SAFETY_DOOR_INPUT_PIN // Default disabled. Uncomment to enable.
 
 // After the safety door switch has been toggled and restored, this setting sets the power-up delay
 // between restoring the spindle and coolant and resuming the cycle.
-#define SAFETY_DOOR_SPINDLE_DELAY 4.0 // Float (seconds)
+#define SAFETY_DOOR_SPINDLE_DELAY 2.0 // Float (seconds)
 #define SAFETY_DOOR_COOLANT_DELAY 1.0 // Float (seconds)
 
 // Enable CoreXY kinematics. Use ONLY with CoreXY machines.
@@ -308,7 +308,7 @@
 // step rate is strictly limited by the CPU speed and will change if something other than an AVR running
 // at 16MHz is used.
 // NOTE: For now disabled, will enable if flash space permits.
-// #define MAX_STEP_RATE_HZ 30000 // Hz
+ #define MAX_STEP_RATE_HZ 30000 // Hz
 
 // By default, Grbl sets all input pins to normal-high operation with their internal pull-up resistors
 // enabled. This simplifies the wiring for users by requiring only a switch connected to ground,
@@ -561,13 +561,13 @@
 // NOTE: Still a work-in-progress. Machine coordinates must be in all negative space and
 // does not work with HOMING_FORCE_SET_ORIGIN enabled. Parking motion also moves only in
 // positive direction.
-// #define PARKING_ENABLE  // Default disabled. Uncomment to enable
+#define PARKING_ENABLE  // Default disabled. Uncomment to enable
 
 // Configure options for the parking motion, if enabled.
 #define PARKING_AXIS Z_AXIS // Define which axis that performs the parking motion
 #define PARKING_TARGET -5.0 // Parking axis target. In mm, as machine coordinate [-max_travel,0].
-#define PARKING_RATE 500.0 // Parking fast rate after pull-out in mm/min.
-#define PARKING_PULLOUT_RATE 100.0 // Pull-out/plunge slow feed rate in mm/min.
+#define PARKING_RATE 1000.0 // Parking fast rate after pull-out in mm/min.
+#define PARKING_PULLOUT_RATE 200.0 // Pull-out/plunge slow feed rate in mm/min.
 #define PARKING_PULLOUT_INCREMENT 5.0 // Spindle pull-out and plunge distance in mm. Incremental distance.
                                       // Must be positive value or equal to zero.
 
@@ -577,7 +577,7 @@
 // executed in sync with g-code commands. It is not a real-time command.
 // NOTE: PARKING_ENABLE is required. By default, M56 is active upon initialization. Use 
 // DEACTIVATE_PARKING_UPON_INIT to set M56 P0 as the power-up default.
-// #define ENABLE_PARKING_OVERRIDE_CONTROL   // Default disabled. Uncomment to enable
+#define ENABLE_PARKING_OVERRIDE_CONTROL   // Default disabled. Uncomment to enable
 // #define DEACTIVATE_PARKING_UPON_INIT // Default disabled. Uncomment to enable.
 
 // This option will automatically disable the laser during a feed hold by invoking a spindle stop
