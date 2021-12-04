@@ -139,6 +139,21 @@ uint8_t serial_read()
   }
 }
 
+#ifdef SERIAL_CANCEL
+//
+// Flushes and adds a SERIAL_CANCEL (CAN) character to the serial input buffer.
+// When read by protocol_main_loop it will flush the current input buffer and
+// cancel any active jog motion.
+//
+void serial_cancel_read_buffers ()
+{
+	uint8_t next_head = serial_rx_buffer_head;
+	serial_rx_buffer_tail = next_head;
+	if (++next_head == RX_RING_BUFFER) { next_head = 0; }
+	serial_rx_buffer[serial_rx_buffer_head] = SERIAL_CANCEL;
+	serial_rx_buffer_head = next_head;
+}
+#endif
 
 ISR(SERIAL_RX)
 {
@@ -156,10 +171,14 @@ ISR(SERIAL_RX)
       if (data > 0x7F) { // Real-time control characters are extended ACSII only.
         switch(data) {
           case CMD_SAFETY_DOOR:   system_set_exec_state_flag(EXEC_SAFETY_DOOR); break; // Set as true
-          case CMD_JOG_CANCEL:   
-            if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
-              system_set_exec_state_flag(EXEC_MOTION_CANCEL); 
-            }
+          case CMD_JOG_CANCEL:
+			#ifdef SERIAL_CANCEL
+				serial_cancel_read_buffers();
+			#else
+				if (sys.state & STATE_JOG) { // Block all other states from invoking motion cancel.
+					system_set_exec_state_flag(EXEC_MOTION_CANCEL); 
+				}
+			#endif
             break; 
           #ifdef DEBUG
             case CMD_DEBUG_REPORT: {uint8_t sreg = SREG; cli(); bit_true(sys_rt_exec_debug,EXEC_DEBUG_REPORT); SREG = sreg;} break;

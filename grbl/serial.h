@@ -22,6 +22,8 @@
 #ifndef serial_h
 #define serial_h
 
+// Comment out to revert to default jog cancel handling
+#define SERIAL_CANCEL 0x18
 
 #ifndef RX_BUFFER_SIZE
   #define RX_BUFFER_SIZE 128
